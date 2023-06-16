@@ -64,6 +64,21 @@ public class MainPage implements Initializable {
         stage.setScene(newScene);
     }
 
+    public void goToMemoryMania(Event event)throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("memoryMania.fxml"));
+        Parent rootForNextPage = loader.load();
+
+
+        // Create a new scene using the root node from the FXML file
+        Scene newScene = new Scene(rootForNextPage);
+        MemoryMania memoryMania = loader.getController();
+        memoryMania.setScene(newScene);
+
+        Node sourceNode = (Node) event.getSource();
+        Stage stage = (Stage) sourceNode.getScene().getWindow();
+        stage.setScene(newScene);
+    }
+
 
 
 
