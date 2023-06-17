@@ -1,20 +1,28 @@
 package com.example.typo;
 
+import javafx.animation.Animation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
+import javafx.animation.FillTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+
 
 public class MemoryMania {
     public VBox keyboard;
@@ -22,6 +30,11 @@ public class MemoryMania {
     private Scene scene;
     private Map<String, Rectangle> keyHashMap = new HashMap<>();
     Random rand = new Random();
+    private static final Duration COLOR_CHANGE_DURATION = Duration.seconds(2);
+    private Set<String> letters = new HashSet<>();
+    public TextField textField;
+    private boolean correctAnswer = true;
+
 
 
     /**
@@ -54,17 +67,28 @@ public class MemoryMania {
 
 
                 StackPane stackPane = new StackPane(rectangle, letterText);
-                hBox.getChildren().add(stackPane);
+                hBox.getChildren().addAll(stackPane);
 
                 //This hashmap can be used to trace each rectangle on the keyboard
                 keyHashMap.put(str, rectangle);
             }
-            keyboard.getChildren().add(hBox);
+            keyboard.getChildren().addAll(hBox);
 
         }
 
-        scene.setOnKeyPressed(event -> {
+        textField.setDisable(true);
+        textField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                checkInput(textField.getText());
 
+            }
+        });
+
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode()== KeyCode.SPACE){
+                System.out.println("Space pressed");
+                startRound();
+            }
         });
 
 
@@ -76,8 +100,64 @@ public class MemoryMania {
     public void startRound(){
         for (int i = 0; i< 5; i ++){
 
+            char randomLetter = (char) (rand.nextInt(26) + 'A');
+            String str = String.valueOf(randomLetter);
+            while (letters.contains(str)){
+                randomLetter = (char) (rand.nextInt(26) + 'A');
+                str = String.valueOf(randomLetter);
+                System.out.println("here");
+            }
+
+            letters.add(str);
+//            keyHashMap.get(str).setFill(Color.LIGHTPINK);
+
+
+            FillTransition fillTransition = new FillTransition(COLOR_CHANGE_DURATION, keyHashMap.get(str));
+            fillTransition.setFromValue(Color.LIGHTBLUE);
+            fillTransition.setToValue(Color.LIGHTGREEN);
+
+            // Create the timeline animation
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, event -> fillTransition.play()),
+                    new KeyFrame(COLOR_CHANGE_DURATION)
+            );
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.setAutoReverse(true);
+            timeline.play();
+
 
         }
+
+        textField.setDisable(false);
+
+    }
+
+
+    public void checkInput(String str){
+        Character[] characters = new Character[str.length()];
+        for (int i = 0; i < str.length(); i++) {
+            characters[i] = str.charAt(i) ;
+        }
+
+        for (Character character : characters) {
+            System.out.println(character );
+            if (!letters.contains(String.valueOf(character).toUpperCase() )){
+                correctAnswer = false;
+                break;
+            }else{
+
+            }
+
+        }
+        System.out.println(letters);
+        System.out.println(characters);
+        System.out.println("correct answer"+ correctAnswer);
+
+
+
+
+
+
 
     }
 }
