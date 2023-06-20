@@ -132,32 +132,4 @@ public class MemoryMania {
 
     }
 
-
-    public void checkInput(String str){
-        Character[] characters = new Character[str.length()];
-        for (int i = 0; i < str.length(); i++) {
-            characters[i] = str.charAt(i) ;
-        }
-
-        for (Character character : characters) {
-            System.out.println(character );
-            if (!letters.contains(String.valueOf(character).toUpperCase() )){
-                correctAnswer = false;
-                break;
-            }else{
-
-            }
-
-        }
-        System.out.println(letters);
-        System.out.println(characters);
-        System.out.println("correct answer"+ correctAnswer);
-
-
-
-
-
-
-
-    }
 }
