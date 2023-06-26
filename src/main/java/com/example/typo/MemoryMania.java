@@ -79,7 +79,7 @@ public class MemoryMania {
         textField.setDisable(true);
         textField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                checkInput(textField.getText());
+//                checkInput(textField.getText());
 
             }
         });

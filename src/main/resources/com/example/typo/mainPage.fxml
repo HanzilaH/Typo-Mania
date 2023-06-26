@@ -30,7 +30,7 @@
             </HBox>
             <HBox fx:id="leaderboard" alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="leaderBoard" onMouseEntered="#mouseEntered" onMouseExited="#mouseExited" style="-fx-font-family: 'Arial'; -fx-font-size: 24px; -fx-text-fill: #F9E0BB;" text="Leaderboard">
+                  <Label fx:id="leaderBoard" onMouseClicked="#goToBalloonBuster" onMouseEntered="#mouseEntered" onMouseExited="#mouseExited" style="-fx-font-family: 'Arial'; -fx-font-size: 24px; -fx-text-fill: #F9E0BB;" text="Leaderboard">
                      <padding>
                         <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
                      </padding>
