@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -21,6 +23,7 @@ import javafx.animation.FillTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -34,6 +37,11 @@ public class MemoryMania {
     private Set<String> letters = new HashSet<>();
     public TextField textField;
     private boolean correctAnswer = true;
+    public Text guidanceText;
+    public HBox lives;
+    private int livesLeft = 5;
+    public Text scoreValue;
+    private int score = 0;
 
 
 
@@ -43,6 +51,8 @@ public class MemoryMania {
      */
     public void setScene(Scene sc){
         this.scene = sc;
+        handleHeartImages();
+        guidanceText.setText("This is a memory test \nType the words you see on the keyboard\nPress SPACE to start");
         String[][] keyboardLayout = {
                 {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"},
                 {"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"},
@@ -79,7 +89,28 @@ public class MemoryMania {
         textField.setDisable(true);
         textField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-//                checkInput(textField.getText());
+                String inputletters = textField.getText();
+                if(checkInput(inputletters)){
+                    guidanceText.setText("Your answer \""+inputletters+"" +
+                            "\" is True \nPress SPACE to continue");
+                    score+=5;
+                    scoreValue.setText(String.valueOf(score));
+                }else{
+                    guidanceText.setText("Your answer is False \nPress SPACE to continue");
+                    livesLeft --;
+                    handleHeartImages();
+                }
+
+                letters.clear();
+                textField.setDisable(true);
+                scene.setOnKeyPressed(ev -> {
+                    if (ev.getCode()== KeyCode.SPACE){
+                        guidanceText.setText("");
+                        System.out.println("Space pressed");
+                        startRound();
+                    }
+                });
+
 
             }
         });
@@ -97,10 +128,38 @@ public class MemoryMania {
 
     }
 
+
+    private void handleHeartImages(){
+        lives.getChildren().clear();
+        for (int i = 0; i< livesLeft; i++){
+            try{
+                //the red heart image exists in the resources folder
+                Image image = new Image(getClass().getResource("heart.png").openStream());
+                ImageView imageView = new ImageView(image);
+                imageView.setFitHeight(25);
+                imageView.setFitWidth(30);
+                lives.getChildren().add(imageView);
+            }catch (IOException e){}
+        }
+        for (int j = 0; j< 5 - livesLeft; j++){
+            try{
+                //the white heart images also exists in the resources folder
+                Image image = new Image(getClass().getResource("whiteheart.png").openStream());
+                ImageView imageView = new ImageView(image);
+                imageView.setFitHeight(25);
+                imageView.setFitWidth(30);
+                lives.getChildren().add(imageView);
+            }catch (IOException e){}
+        }
+
+
+    }
+
     public void startRound(){
         for (int i = 0; i< 5; i ++){
 
             char randomLetter = (char) (rand.nextInt(26) + 'A');
+
             String str = String.valueOf(randomLetter);
             while (letters.contains(str)){
                 randomLetter = (char) (rand.nextInt(26) + 'A');
@@ -109,20 +168,25 @@ public class MemoryMania {
             }
 
             letters.add(str);
+
+
+
+            System.out.println(str);
 //            keyHashMap.get(str).setFill(Color.LIGHTPINK);
 
 
-            FillTransition fillTransition = new FillTransition(COLOR_CHANGE_DURATION, keyHashMap.get(str));
-            fillTransition.setFromValue(Color.LIGHTBLUE);
-            fillTransition.setToValue(Color.LIGHTGREEN);
 
-            // Create the timeline animation
+
+            Rectangle rectangle = keyHashMap.get(str);
+
+
             Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.ZERO, event -> fillTransition.play()),
+                    new KeyFrame(Duration.ZERO, event -> rectangle.setFill(Color.LIGHTGREEN)),
                     new KeyFrame(COLOR_CHANGE_DURATION)
             );
-            timeline.setCycleCount(Timeline.INDEFINITE);
-            timeline.setAutoReverse(true);
+            timeline.setCycleCount(1);
+            timeline.setOnFinished(event -> rectangle.setFill(Color.LIGHTBLUE));
+
             timeline.play();
 
 
@@ -132,4 +196,41 @@ public class MemoryMania {
 
     }
 
+
+    public boolean checkInput(String str){
+
+
+
+        //Make a new map for the input letters and then compares both the maps
+        ArrayList<String> inputLetters = new ArrayList<>();
+
+
+        for (int i = 0; i < str.length(); i++) {
+            inputLetters.add(   String.valueOf(str.charAt(i) ).toUpperCase()   )  ;
+        }
+
+        if (inputLetters.size()!= letters.size()) return false;
+
+
+        for(String ltr: inputLetters){
+            if (!letters.contains(ltr) ){
+                return false;
+            }
+        }
+
+
+        System.out.println(letters);
+
+
+
+
+        return true;
+
+
+
+
+
+
+
+    }
 }

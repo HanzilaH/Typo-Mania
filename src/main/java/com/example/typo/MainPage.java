@@ -79,18 +79,18 @@ public class MainPage implements Initializable {
         stage.setScene(newScene);
     }
     public void goToBalloonBuster(Event event)throws IOException{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("BalloonBuster.fxml"));
-        Parent rootForNextPage = loader.load();
-
-
-        // Create a new scene using the root node from the FXML file
-        Scene newScene = new Scene(rootForNextPage);
-        BalloonBuster balloonBuster = loader.getController();
-        balloonBuster.setScene(newScene);
-
-        Node sourceNode = (Node) event.getSource();
-        Stage stage = (Stage) sourceNode.getScene().getWindow();
-        stage.setScene(newScene);
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("BalloonBuster.fxml"));
+//        Parent rootForNextPage = loader.load();
+//
+//
+//        // Create a new scene using the root node from the FXML file
+//        Scene newScene = new Scene(rootForNextPage);
+//        BalloonBuster balloonBuster = loader.getController();
+//        balloonBuster.setScene(newScene);
+//
+//        Node sourceNode = (Node) event.getSource();
+//        Stage stage = (Stage) sourceNode.getScene().getWindow();
+//        stage.setScene(newScene);
     }
 
 
